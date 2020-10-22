@@ -1,0 +1,19 @@
+.progress-bar {
+  position: relative;
+  display: flex;
+  align-items: center;
+
+  .progress-bar-push {
+  }
+  .progress-bar-thumb {
+    height: 3px;
+    border-radius: 4px;
+    background-color: palevioletred;
+    transition: width 0.3s ease-in;
+  }
+  .progress-bar-label {
+    margin-left: 5px;
+    font-size: x-small;
+    color: rgba(0, 0, 0, 0.75);
+  }
+}
