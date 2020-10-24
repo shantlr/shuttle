@@ -17,6 +17,12 @@
       display: flex;
       font-size: small;
 
+      > .side-bar-operation-from {
+        color: rgba(0, 0, 0, 0.5);
+        margin-right: 5px;
+        font-size: smaller;
+      }
+
       > .side-bar-operation-name {
         margin-right: 5px;
         flex-grow: 1;

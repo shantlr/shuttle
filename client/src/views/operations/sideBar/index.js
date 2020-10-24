@@ -1,6 +1,7 @@
 import { get, map, reduce, sortBy } from 'lodash';
 import React, { useCallback, useEffect, useMemo } from 'react';
 import classnames from 'classnames';
+import moment from 'moment';
 
 import { formatDuration } from '../../../utils';
 
@@ -79,6 +80,7 @@ export const SideBar = ({ selectedApi, selectedOperationId }) => {
               history.push(`/operations/${selectedApi}/${op.id}`);
             }}
           >
+            <div className="side-bar-operation-from">[{op.from}]</div>
             <div
               className={classnames('side-bar-operation-name', {
                 'side-bar-operation-name-missing': !op.operationName,
@@ -87,7 +89,7 @@ export const SideBar = ({ selectedApi, selectedOperationId }) => {
               {op.operationName || 'Unknown'}
             </div>
             <div className="side-bar-operation-duration">
-              {formatDuration(op.tracing.duration)}
+              <div>{formatDuration(op.tracing.duration)}</div>
             </div>
           </div>
         ))}

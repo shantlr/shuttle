@@ -1,5 +1,5 @@
 import { map } from 'lodash';
-import React, { useState } from 'react';
+import React, { useMemo, useState } from 'react';
 import { formatDuration } from '../../utils';
 import { ProgressBar } from '../progressBar';
 import './style.scss';
@@ -7,23 +7,33 @@ import './style.scss';
 export const TraceNode = ({ totalDuraton, meta, childs, depth = 0 }) => {
   const [showChilds, setShowChilds] = useState(true);
 
+  let indent = [];
+  for (let i = 0; i < depth; i += 1) {
+    indent.push(<React.Fragment key={i}>&nbsp;&bull;</React.Fragment>);
+  }
+
+  const hasChilds = useMemo(() => Object.keys(childs).length > 0, [childs]);
+
   return (
     <div className="trace-node">
       {Boolean(meta) && (
         <div
           className="trace-node-line"
-          onClick={() => setShowChilds(!showChilds)}
+          onClick={() => hasChilds && setShowChilds(!showChilds)}
         >
-          <div
-            className="trace-node-name-title"
-            style={{ paddingLeft: depth * 8 }}
-          >
-            <span className="trace-node-name">{meta.fieldName}</span>
+          <div className="trace-node-name-title">
+            <span className="trace-node-indent">{indent}</span>
+            <span className="trace-node-name" style={{ paddingLeft: 5 }}>
+              {meta.fieldName}
+            </span>
             <span className="trace-node-type">{meta.returnType}</span>
+            {hasChilds && !showChilds && (
+              <span className="trace-node-more">&nbsp;...</span>
+            )}
           </div>
           <div className="trace-node-progress">
             <ProgressBar
-              width={700}
+              width={500}
               push={meta.startOffset / totalDuraton || 0}
               percent={meta.duration / totalDuraton}
               label={formatDuration(meta.duration)}

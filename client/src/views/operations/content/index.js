@@ -1,5 +1,5 @@
-import { get, initial, last, map } from 'lodash';
 import React, { useCallback, useMemo } from 'react';
+import { initial, last, map } from 'lodash';
 import { useSelector } from 'react-redux';
 import { TraceNode } from '../../../components/traceNode';
 import './style.scss';
