@@ -1,0 +1,8 @@
+{
+  "ignore": ["*.test.js", "fixtures/*"],
+  "watch": ["./src", "./package.json"],
+  "events": {},
+  "exec": "babel-node src/index.js",
+  "delay": "1000",
+  "ext": "js,json"
+}
