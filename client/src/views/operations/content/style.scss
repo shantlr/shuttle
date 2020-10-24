@@ -1,0 +1,10 @@
+.operation-trace {
+  padding: 15px;
+  display: flex;
+  flex-direction: column;
+
+  .operation-trace-nodes {
+    height: 100%;
+    overflow: auto;
+  }
+}

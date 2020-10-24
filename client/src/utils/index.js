@@ -6,7 +6,7 @@ export const formatDuration = (duration) => {
     return `${(duration / 1000 / 1000).toFixed(2)}ms`;
   }
   if (duration > 1000) {
-    return `${duration / 1000}µs`;
+    return `${(duration / 1000).toFixed(2)}µs`;
   }
   return duration;
-}
+};

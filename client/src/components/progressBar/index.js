@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react';
+import PropTypes from 'prop-types';
 import './style.scss';
 
 export const ProgressBar = ({ width, push = 0, percent = 1, label }) => {
@@ -17,4 +18,10 @@ export const ProgressBar = ({ width, push = 0, percent = 1, label }) => {
       <div className="progress-bar-label">{label}</div>
     </div>
   );
+};
+ProgressBar.propTypes = {
+  width: PropTypes.number,
+  push: PropTypes.number,
+  percent: PropTypes.number,
+  label: PropTypes.string,
 };
