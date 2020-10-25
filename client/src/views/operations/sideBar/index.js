@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useMemo } from 'react';
+import React, { useCallback, useEffect, useMemo, useRef } from 'react';
 
 import { MenuItem, Select } from '@material-ui/core';
 import classnames from 'classnames';
@@ -22,6 +22,9 @@ export const SideBar = ({ selectedApi, selectedOperationId }) => {
   const apiNames = useMemo(() => {
     return sortBy(apis, (name) => (name === ALL_API_KEY ? -1 : name));
   }, [apis]);
+
+  const scrollRef = useRef();
+  const isScrollBottomRef = useRef(true);
 
   const operations = useSelector(
     useCallback(
@@ -54,6 +57,12 @@ export const SideBar = ({ selectedApi, selectedOperationId }) => {
     }
   }, [history, operations, selectedApi, selectedOperationId]);
 
+  useEffect(() => {
+    if (isScrollBottomRef.current && scrollRef.current) {
+      scrollRef.current.scrollIntoView({});
+    }
+  }, [operations]);
+
   return (
     <div className="side-bar">
       <div className="side-bar-header">
@@ -74,7 +83,19 @@ export const SideBar = ({ selectedApi, selectedOperationId }) => {
         <AddJsonOperation />
       </div>
 
-      <div className="side-bar-operation-list">
+      <div
+        className="side-bar-operation-list"
+        onScroll={(e) => {
+          const height = e.target.offsetHeight;
+          const scrollTop = e.target.scrollTop;
+          const totalHeight = e.target.scrollHeight;
+          if (scrollTop + height === totalHeight) {
+            isScrollBottomRef.current = true;
+          } else {
+            isScrollBottomRef.current = false;
+          }
+        }}
+      >
         {map(operations, (op) => (
           <div
             key={op.id}
@@ -98,6 +119,8 @@ export const SideBar = ({ selectedApi, selectedOperationId }) => {
             </div>
           </div>
         ))}
+
+        <div ref={scrollRef} />
       </div>
     </div>
   );

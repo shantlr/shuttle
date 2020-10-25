@@ -3,6 +3,8 @@
   min-width: 230px;
   height: 100%;
   overflow: hidden;
+  display: flex;
+  flex-direction: column;
 
   > .side-bar-header {
     padding: 10px 0 10px 10px;
@@ -13,6 +15,9 @@
   }
 
   > .side-bar-operation-list {
+    height: 100%;
+    overflow: auto;
+
     > .side-bar-operation {
       padding: 6px;
       cursor: pointer;
