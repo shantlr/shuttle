@@ -12,6 +12,8 @@
   }
 
   > .operation-side-info {
+    padding-left: 5px;
+    overflow: auto;
     > .operation-side-info-section {
       font-weight: bold;
     }

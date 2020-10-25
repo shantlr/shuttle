@@ -6,6 +6,7 @@ import { BASE_URL } from '../../config';
 import { ALL_API_KEY } from '../../data';
 
 import { OperationTrace } from './content';
+import { DefaultContent } from './default';
 import { SideBar } from './sideBar';
 
 import './style.scss';
@@ -32,6 +33,7 @@ const OperationViewContent = ({ api, operationId }) => {
     <div className="operation-view">
       <SideBar selectedApi={api} selectedOperationId={operationId} />
       {operationId && <OperationTrace operationId={operationId} />}
+      {!operationId && <DefaultContent />}
     </div>
   );
 };

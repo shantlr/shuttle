@@ -3,8 +3,10 @@ import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import { initial, last, map } from 'lodash';
 import { useSelector } from 'react-redux';
 
+import { GqlQuery } from '../../../components/gqlQuery';
 import { TraceNode } from '../../../components/traceNode';
 import './style.scss';
+import { DefaultContent } from '../default';
 
 const getNode = (tree, path) => {
   let current = tree;
@@ -39,9 +41,9 @@ const toTree = (execution) => {
 const computeProgressWidth = () => {
   const winWidth = window.innerWidth;
   if (winWidth < 1100) {
-    return 400;
+    return 300;
   }
-  return Math.min(650, winWidth - 700);
+  return Math.min(650, winWidth - 800);
 };
 const useProgressWidth = () => {
   const [width, setWidth] = useState(() => computeProgressWidth());
@@ -75,7 +77,7 @@ export const OperationTrace = ({ operationId }) => {
   }, [operation]);
 
   if (!operation) {
-    return null;
+    return <DefaultContent />;
   }
 
   const totalDuration = operation.tracing.duration;
@@ -118,7 +120,9 @@ export const OperationTrace = ({ operationId }) => {
       </div>
       <div className="operation-side-info">
         <div className="operation-side-info-section">Query</div>
-        <div className="operation-side-info-query">{operation.query}</div>
+        <div className="operation-side-info-query">
+          <GqlQuery query={operation.query} />
+        </div>
       </div>
     </div>
   );

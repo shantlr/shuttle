@@ -41,9 +41,9 @@ export const TraceNode = ({
           </div>
           <div className="trace-node-progress">
             <ProgressBar
-              width={progressWidth}
+              width={progressWidth || 0}
               push={meta.startOffset / totalDuraton || 0}
-              percent={meta.duration / totalDuraton}
+              percent={meta.duration / totalDuraton || 0}
               label={formatDuration(meta.duration)}
             />
           </div>
