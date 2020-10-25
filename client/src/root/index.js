@@ -2,6 +2,7 @@ import React, { useEffect } from 'react';
 import { Provider, useDispatch } from 'react-redux';
 import { BrowserRouter as Router } from 'react-router-dom';
 import io from 'socket.io-client';
+import { API_URL } from '../config';
 
 import { store } from '../data';
 import { addOperation } from '../data/actions';
@@ -25,7 +26,7 @@ export const RootApp = () => {
 const Connection = ({ children }) => {
   const dispatch = useDispatch();
   useEffect(() => {
-    const socket = io('ws://localhost:3005/operations', {
+    const socket = io(`${API_URL}/operations`, {
       path: '/api',
     });
 

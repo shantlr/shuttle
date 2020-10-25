@@ -3,6 +3,7 @@ import http from 'http';
 import Server from 'socket.io';
 import cors from 'cors';
 import bodyParser from 'body-parser';
+import path from 'path';
 
 const app = express();
 const server = http.createServer(app);
@@ -15,6 +16,12 @@ app.use(
     credentials: true,
   })
 );
+
+app.use('/app', express.static(path.join(__dirname, '../public')));
+
+app.get('/', (req, res) => {
+  return res.redirect('/app');
+});
 
 const io = new Server({
   path: '/api',

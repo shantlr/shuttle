@@ -1,7 +1,6 @@
 import { get, map, reduce, sortBy } from 'lodash';
 import React, { useCallback, useEffect, useMemo } from 'react';
 import classnames from 'classnames';
-import moment from 'moment';
 
 import { formatDuration } from '../../../utils';
 
@@ -10,6 +9,7 @@ import { useSelector } from 'react-redux';
 import { MenuItem, Select } from '@material-ui/core';
 import { ALL_API_KEY } from '../../../data';
 import { useHistory } from 'react-router-dom';
+import { BASE_URL } from '../../../config';
 
 const selectApis = (state) => state.operations.apis;
 
@@ -43,10 +43,12 @@ export const SideBar = ({ selectedApi, selectedOperationId }) => {
 
   useEffect(() => {
     if (!selectedOperationId && operations.length) {
-      history.replace(`/operations/${selectedApi}/${operations[0].id}`);
+      history.replace(
+        `${BASE_URL}/operations/${selectedApi}/${operations[0].id}`
+      );
     }
     if (selectedOperationId && !operations.length) {
-      history.replace(`/operations/${selectedApi}`);
+      history.replace(`${BASE_URL}/operations/${selectedApi}`);
     }
   }, [history, operations, selectedApi, selectedOperationId]);
 
@@ -57,7 +59,7 @@ export const SideBar = ({ selectedApi, selectedOperationId }) => {
           className="side-bar-select-api"
           value={selectedApi}
           onChange={(e) => {
-            history.push(`/operations/${e.target.value}`);
+            history.push(`${BASE_URL}/operations/${e.target.value}`);
           }}
         >
           {apiNames.map((name) => (
@@ -77,7 +79,7 @@ export const SideBar = ({ selectedApi, selectedOperationId }) => {
               'side-bar-operation-active': selectedOperationId === op.id,
             })}
             onClick={() => {
-              history.push(`/operations/${selectedApi}/${op.id}`);
+              history.push(`${BASE_URL}/operations/${selectedApi}/${op.id}`);
             }}
           >
             <div className="side-bar-operation-from">[{op.from}]</div>

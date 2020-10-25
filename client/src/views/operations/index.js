@@ -5,12 +5,13 @@ import { SideBar } from './sideBar';
 import { OperationTrace } from './content';
 
 import './style.scss';
+import { BASE_URL } from '../../config';
 
 export const OperationsView = () => {
   return (
     <Switch>
       <Route
-        path="/operations/:apiName/:op?"
+        path={`${BASE_URL}/operations/:apiName/:op?`}
         render={({ match }) => (
           <OperationViewContent
             api={match.params.apiName}
@@ -18,7 +19,7 @@ export const OperationsView = () => {
           />
         )}
       />
-      <Redirect to={`/operations/${ALL_API_KEY}`} />
+      <Redirect to={`${BASE_URL}/operations/${ALL_API_KEY}`} />
     </Switch>
   );
 };
