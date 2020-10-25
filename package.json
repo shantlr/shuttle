@@ -6,9 +6,13 @@
   "author": "Patrick <shantry@hotmail.fr>",
   "license": "MIT",
   "scripts": {
+    "start": "concurrently -n \"client,server\" \"cd client && yarn start\" \"cd server && yarn start\"",
     "build": "yarn clean:dist && yarn build:client && yarn build:server",
     "clean:dist": "rm -rf dist && mkdir dist",
     "build:client": "cd client && yarn build && cp -r build ../dist/public",
     "build:server": "cd server && yarn build && cp -r build ../dist/src && cp -r node_modules ../dist/node_modules"
+  },
+  "devDependencies": {
+    "concurrently": "^5.3.0"
   }
 }
