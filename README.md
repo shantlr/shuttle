@@ -7,7 +7,7 @@ Apollo tracing visualization tool
 ### Setup container
 
 ```bash
-docker run --publish 8021:8021 -d shantry/shuttle:0.0.1
+docker run --publish 8021:8021 -d shantry/shuttle:0.0.2
 ```
 
 ### Setup apollo server
