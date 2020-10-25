@@ -1,16 +1,17 @@
 import React, { useCallback, useEffect, useMemo } from 'react';
 
-import { IconButton, MenuItem, Select } from '@material-ui/core';
-import AddIcon from '@material-ui/icons/Add';
+import { MenuItem, Select } from '@material-ui/core';
 import classnames from 'classnames';
 import { get, map, reduce, sortBy } from 'lodash';
 import { useSelector } from 'react-redux';
 import { useHistory } from 'react-router-dom';
 
-import './style.scss';
 import { BASE_URL } from '../../../config';
 import { ALL_API_KEY } from '../../../data';
 import { formatDuration } from '../../../utils';
+
+import { AddJsonOperation } from './addJsonOperation';
+import './style.scss';
 
 const selectApis = (state) => state.operations.apis;
 
@@ -70,9 +71,7 @@ export const SideBar = ({ selectedApi, selectedOperationId }) => {
             </MenuItem>
           ))}
         </Select>
-        <IconButton size="small">
-          <AddIcon />
-        </IconButton>
+        <AddJsonOperation />
       </div>
 
       <div className="side-bar-operation-list">
