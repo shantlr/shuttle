@@ -8,7 +8,7 @@ import path from 'path';
 const app = express();
 const server = http.createServer(app);
 
-const PORT = 3005;
+const PORT = process.env.PORT || 8021;
 
 app.use(
   cors({
@@ -40,12 +40,16 @@ app.post('/operation', bodyParser.json(), (req, res) => {
 });
 
 server.listen(PORT, () => {
-  console.log(`Server listening on port ${PORT}`);
+  console.log(
+    `You can post your traces to http://localhost:${PORT}/operations`
+  );
+  console.log(`Shuttle available at http://localhost:${PORT}/app`);
 });
 
 const gracefulShutdown = () => {
+  console.log('Closing shuttle...');
   server.close((err) => {
-    console.log('Server closed');
+    console.log('Shuttle closed');
     if (!err) {
       process.exit(0);
     } else {
