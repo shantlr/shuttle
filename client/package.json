@@ -5,6 +5,7 @@
   "homepage": "/app",
   "dependencies": {
     "@material-ui/core": "^4.11.0",
+    "@material-ui/icons": "^4.9.1",
     "@testing-library/jest-dom": "^4.2.4",
     "@testing-library/react": "^9.3.2",
     "@testing-library/user-event": "^7.1.2",
@@ -35,7 +36,36 @@
       "react-app",
       "prettier",
       "prettier/react"
-    ]
+    ],
+    "plugins": [
+      "import"
+    ],
+    "rules": {
+      "import/order": [
+        "warn",
+        {
+          "alphabetize": {
+            "order": "asc"
+          },
+          "groups": [
+            "builtin",
+            "external",
+            "parent",
+            "sibling",
+            "index"
+          ],
+          "newlines-between": "always",
+          "pathGroups": [
+            {
+              "pattern": "react",
+              "group": "external",
+              "position": "before"
+            }
+          ],
+          "pathGroupsExcludedImportTypes": []
+        }
+      ]
+    }
   },
   "browserslist": {
     "production": [
@@ -50,6 +80,7 @@
     ]
   },
   "devDependencies": {
-    "eslint-config-prettier": "^6.14.0"
+    "eslint-config-prettier": "^6.14.0",
+    "eslint-plugin-import": "^2.22.1"
   }
 }

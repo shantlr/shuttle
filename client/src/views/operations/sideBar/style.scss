@@ -5,7 +5,8 @@
   overflow: hidden;
 
   > .side-bar-header {
-    padding: 10px;
+    padding: 10px 0 10px 10px;
+    display: flex;
     > .side-bar-select-api {
       width: 100%;
     }

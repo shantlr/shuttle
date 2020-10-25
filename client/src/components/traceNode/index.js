@@ -1,5 +1,7 @@
-import { map } from 'lodash';
 import React, { useMemo, useState } from 'react';
+
+import { map } from 'lodash';
+
 import { formatDuration } from '../../utils';
 import { ProgressBar } from '../progressBar';
 import './style.scss';

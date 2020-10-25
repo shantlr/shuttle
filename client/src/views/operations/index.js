@@ -1,11 +1,14 @@
 import React from 'react';
+
 import { Redirect, Route, Switch } from 'react-router-dom';
+
+import { BASE_URL } from '../../config';
 import { ALL_API_KEY } from '../../data';
-import { SideBar } from './sideBar';
+
 import { OperationTrace } from './content';
+import { SideBar } from './sideBar';
 
 import './style.scss';
-import { BASE_URL } from '../../config';
 
 export const OperationsView = () => {
   return (

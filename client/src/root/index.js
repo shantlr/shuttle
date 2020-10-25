@@ -1,9 +1,10 @@
 import React, { useEffect } from 'react';
+
 import { Provider, useDispatch } from 'react-redux';
 import { BrowserRouter as Router } from 'react-router-dom';
 import io from 'socket.io-client';
-import { API_URL } from '../config';
 
+import { API_URL } from '../config';
 import { store } from '../data';
 import { addOperation } from '../data/actions';
 import { OperationsView } from '../views/operations';
