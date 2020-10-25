@@ -1,4 +1,10 @@
-import React, { useCallback, useEffect, useMemo, useRef } from 'react';
+import React, {
+  useCallback,
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+} from 'react';
 
 import { MenuItem, Select } from '@material-ui/core';
 import classnames from 'classnames';
@@ -63,8 +69,10 @@ export const SideBar = ({ selectedApi, selectedOperationId }) => {
     }
   }, [operations]);
 
+  const [width, setWidth] = useState(230);
+
   return (
-    <div className="side-bar">
+    <div className="side-bar" style={{ width, minWidth: width }}>
       <div className="side-bar-header">
         <Select
           className="side-bar-select-api"

@@ -1,6 +1,4 @@
 .side-bar {
-  width: 230px;
-  min-width: 230px;
   height: 100%;
   overflow: hidden;
   display: flex;
@@ -34,6 +32,10 @@
       > .side-bar-operation-name {
         margin-right: 5px;
         flex-grow: 1;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+
         &.side-bar-operation-name-missing {
           color: rgba(0, 0, 0, 0.8);
         }

@@ -82,37 +82,43 @@ export const OperationTrace = ({ operationId }) => {
 
   return (
     <div className="operation-trace">
-      <TraceNode
-        totalDuraton={totalDuration}
-        meta={{
-          fieldName: 'total',
-          duration: totalDuration,
-        }}
-        childs={{}}
-        progressWidth={progressWidth}
-      />
-      <TraceNode
-        totalDuraton={totalDuration}
-        meta={{ fieldName: 'parsing', ...operation.tracing.parsing }}
-        childs={{}}
-        progressWidth={progressWidth}
-      />
-      <TraceNode
-        totalDuraton={totalDuration}
-        meta={{ fieldName: 'validation', ...operation.tracing.validation }}
-        childs={{}}
-        progressWidth={progressWidth}
-      />
       <div className="operation-trace-nodes">
-        {map(tree.childs, ({ meta, childs }, key) => (
-          <TraceNode
-            key={key}
-            totalDuraton={totalDuration}
-            meta={meta}
-            childs={childs}
-            progressWidth={progressWidth}
-          />
-        ))}
+        <TraceNode
+          totalDuraton={totalDuration}
+          meta={{
+            fieldName: 'total',
+            duration: totalDuration,
+          }}
+          childs={{}}
+          progressWidth={progressWidth}
+        />
+        <TraceNode
+          totalDuraton={totalDuration}
+          meta={{ fieldName: 'parsing', ...operation.tracing.parsing }}
+          childs={{}}
+          progressWidth={progressWidth}
+        />
+        <TraceNode
+          totalDuraton={totalDuration}
+          meta={{ fieldName: 'validation', ...operation.tracing.validation }}
+          childs={{}}
+          progressWidth={progressWidth}
+        />
+        <div className="operation-trace-nodes">
+          {map(tree.childs, ({ meta, childs }, key) => (
+            <TraceNode
+              key={key}
+              totalDuraton={totalDuration}
+              meta={meta}
+              childs={childs}
+              progressWidth={progressWidth}
+            />
+          ))}
+        </div>
+      </div>
+      <div className="operation-side-info">
+        <div className="operation-side-info-section">Query</div>
+        <div className="operation-side-info-query">{operation.query}</div>
       </div>
     </div>
   );
