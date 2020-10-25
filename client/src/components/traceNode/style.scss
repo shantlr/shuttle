@@ -8,6 +8,18 @@
     }
 
     > .trace-node-name-title {
+      border-right: 1px solid rgba(0, 0, 0, 0.1);
+      box-sizing: border-box;
+      width: 250px;
+      overflow: hidden;
+      padding-bottom: 2px;
+      margin-right: 5px;
+      cursor: pointer;
+      &:hover {
+        background-color: aliceblue;
+        overflow: visible;
+      }
+
       > .trace-node-indent {
         color: rgba(0, 0, 0, 0.1);
       }
@@ -21,16 +33,6 @@
       }
       > .trace-node-more {
         color: rgba(0, 0, 0, 0.5);
-      }
-      border-right: 1px solid rgba(0, 0, 0, 0.1);
-      box-sizing: border-box;
-      width: 250px;
-      overflow: hidden;
-      padding-bottom: 2px;
-      margin-right: 5px;
-      cursor: pointer;
-      &:hover {
-        background-color: aliceblue;
       }
     }
 

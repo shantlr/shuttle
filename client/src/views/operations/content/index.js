@@ -1,4 +1,4 @@
-import React, { useCallback, useMemo } from 'react';
+import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import { initial, last, map } from 'lodash';
 import { useSelector } from 'react-redux';
 import { TraceNode } from '../../../components/traceNode';
@@ -34,7 +34,27 @@ const toTree = (execution) => {
   return root;
 };
 
+const computeProgressWidth = () => {
+  const winWidth = window.innerWidth;
+  if (winWidth < 1100) {
+    return 400;
+  }
+  return Math.min(650, winWidth - 700);
+};
+const useProgressWidth = () => {
+  const [width, setWidth] = useState(() => computeProgressWidth());
+  useEffect(() => {
+    const listener = () => {
+      setWidth(computeProgressWidth());
+    };
+    window.addEventListener('resize', listener);
+    return () => window.removeEventListener('resize', listener);
+  }, []);
+  return width;
+};
+
 export const OperationTrace = ({ operationId }) => {
+  const progressWidth = useProgressWidth();
   const operation = useSelector(
     useCallback(
       (state) => {
@@ -67,16 +87,19 @@ export const OperationTrace = ({ operationId }) => {
           duration: totalDuration,
         }}
         childs={{}}
+        progressWidth={progressWidth}
       />
       <TraceNode
         totalDuraton={totalDuration}
         meta={{ fieldName: 'parsing', ...operation.tracing.parsing }}
         childs={{}}
+        progressWidth={progressWidth}
       />
       <TraceNode
         totalDuraton={totalDuration}
         meta={{ fieldName: 'validation', ...operation.tracing.validation }}
         childs={{}}
+        progressWidth={progressWidth}
       />
       <div className="operation-trace-nodes">
         {map(tree.childs, ({ meta, childs }, key) => (
@@ -85,6 +108,7 @@ export const OperationTrace = ({ operationId }) => {
             totalDuraton={totalDuration}
             meta={meta}
             childs={childs}
+            progressWidth={progressWidth}
           />
         ))}
       </div>

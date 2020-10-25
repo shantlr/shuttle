@@ -4,7 +4,13 @@ import { formatDuration } from '../../utils';
 import { ProgressBar } from '../progressBar';
 import './style.scss';
 
-export const TraceNode = ({ totalDuraton, meta, childs, depth = 0 }) => {
+export const TraceNode = ({
+  totalDuraton,
+  meta,
+  childs,
+  progressWidth = 500,
+  depth = 0,
+}) => {
   const [showChilds, setShowChilds] = useState(true);
 
   let indent = [];
@@ -33,7 +39,7 @@ export const TraceNode = ({ totalDuraton, meta, childs, depth = 0 }) => {
           </div>
           <div className="trace-node-progress">
             <ProgressBar
-              width={500}
+              width={progressWidth}
               push={meta.startOffset / totalDuraton || 0}
               percent={meta.duration / totalDuraton}
               label={formatDuration(meta.duration)}
@@ -50,6 +56,7 @@ export const TraceNode = ({ totalDuraton, meta, childs, depth = 0 }) => {
               key={key}
               meta={child.meta}
               childs={child.childs}
+              progressWidth={progressWidth}
             />
           ))}
         </div>
