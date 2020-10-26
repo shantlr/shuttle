@@ -9,17 +9,18 @@ const app = express();
 const server = http.createServer(app);
 
 const PORT = process.env.PORT || 8021;
+const MAX_PAYLOAD_SIZE = process.env.MAX_PAYLOAD_SIZE || '10mb';
 
 app.use(
   cors({
-    origin: ['http://localhost:3000'],
+    origin: ['http://localhost:8022'],
     credentials: true,
   })
 );
 
 app.use('/app', express.static(path.join(__dirname, '../public')));
 
-app.get('/', (req, res) => {
+app.get(['/', '/app/*'], (req, res) => {
   return res.redirect('/app');
 });
 
@@ -32,12 +33,14 @@ io.of('operations').on('connect', () => {
   console.log('App connected');
 });
 
-app.post('/operation', bodyParser.json(), (req, res) => {
-  // console.log(req.body);
-  io.of('operations').emit('operation', req.body);
-
-  return res.sendStatus(200);
-});
+app.post(
+  '/operation',
+  bodyParser.json({ limit: MAX_PAYLOAD_SIZE }),
+  (req, res) => {
+    io.of('operations').emit('operation', req.body);
+    return res.sendStatus(200);
+  }
+);
 
 server.listen(PORT, () => {
   console.log(

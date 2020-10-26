@@ -88,6 +88,11 @@ const applyGqlNode = (node, text) => {
       text.addNode('name', node.value);
       break;
     }
+    case 'NonNullType': {
+      applyGqlNode(node.type, text);
+      text.addNode('non-null', '!');
+      break;
+    }
     case 'BooleanValue': {
       text.addNode('bool', node.value.toString());
       break;
@@ -140,6 +145,16 @@ const applyGqlNode = (node, text) => {
       applyGqlNode(node.typeCondition, text);
       applyGqlNode(node.selectionSet, text);
       text.newLine();
+      break;
+    }
+    case 'InlineFragment': {
+      text
+        .addNode('fragmentSpread', '...')
+        .addNode('space', ' ')
+        .addNode('fragmentOn', 'on')
+        .addNode('space', ' ');
+      applyGqlNode(node.typeCondition, text);
+      applyGqlNode(node.selectionSet, text);
       break;
     }
     case 'FragmentSpread': {

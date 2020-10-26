@@ -1,6 +1,6 @@
 # Shuttle
 
-Apollo tracing visualization tool
+Apollo server trace visualization tool
 
 ## Docker
 

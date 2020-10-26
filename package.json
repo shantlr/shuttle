@@ -6,7 +6,7 @@
   "author": "Patrick <shantry@hotmail.fr>",
   "license": "MIT",
   "scripts": {
-    "start": "concurrently -n \"client,server\" \"cd client && yarn start\" \"cd server && yarn start\"",
+    "start": "concurrently -n \"client,server\" \"cd client && PORT=8022 yarn start\" \"cd server && yarn start\"",
     "build": "yarn clean:dist && yarn build:client && yarn build:server",
     "clean:dist": "rm -rf dist && mkdir dist",
     "build:client": "cd client && yarn build && cp -r build ../dist/public",
