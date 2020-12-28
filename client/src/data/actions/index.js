@@ -8,3 +8,8 @@ export const addOperation = (operation) => ({
     ...operation,
   },
 });
+
+export const CLEAR_ALL_OPERATIONS = 'CLEAR_ALL_OPERATIONS';
+export const clearAllOperations = () => ({
+  type: CLEAR_ALL_OPERATIONS,
+});

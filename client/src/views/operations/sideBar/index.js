@@ -6,14 +6,16 @@ import React, {
   useState,
 } from 'react';
 
-import { MenuItem, Select } from '@material-ui/core';
+import { IconButton, MenuItem, Select } from '@material-ui/core';
+import ClearIcon from '@material-ui/icons/Delete';
 import { get, map, reduce, sortBy } from 'lodash';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { useHistory } from 'react-router-dom';
 import styled from 'styled-components';
 
 import { BASE_URL } from '../../../config';
 import { ALL_API_KEY } from '../../../data';
+import { clearAllOperations } from '../../../data/actions';
 
 import { AddJsonOperation } from './addJsonOperation';
 import { SideBarItem } from './item';
@@ -27,12 +29,13 @@ const Container = styled.div`
   flex-direction: column;
 `;
 const Header = styled.div`
-  padding: 10px 0 10px 10px;
+  padding: 10px 0 10px 5px;
   display: flex;
 `;
 
 const SelectApi = styled(Select)`
   width: 100%;
+  margin-left: 2px;
 `;
 
 const ListContainer = styled.div`
@@ -43,6 +46,7 @@ const ListContainer = styled.div`
 export const SideBar = ({ selectedApi, selectedOperationId }) => {
   const history = useHistory();
   const apis = Object.keys(useSelector(selectApis));
+  const dispatch = useDispatch();
 
   const apiNames = useMemo(() => {
     return sortBy(apis, (name) => (name === ALL_API_KEY ? -1 : name));
@@ -93,6 +97,9 @@ export const SideBar = ({ selectedApi, selectedOperationId }) => {
   return (
     <Container style={{ width, minWidth: width }}>
       <Header>
+        <IconButton size="small" onClick={() => dispatch(clearAllOperations())}>
+          <ClearIcon />
+        </IconButton>
         <SelectApi
           value={selectedApi}
           onChange={(e) => {
