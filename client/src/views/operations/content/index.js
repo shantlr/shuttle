@@ -11,12 +11,12 @@ import { forEach, get } from 'lodash';
 import { useSelector } from 'react-redux';
 import AutoSizer from 'react-virtualized-auto-sizer';
 import { FixedSizeList as List } from 'react-window';
+import styled from 'styled-components';
 
-import { GqlQuery } from '../../../components/gqlQuery';
 import { TraceNode } from '../../../components/traceNode';
-import './style.scss';
 import { DefaultContent } from '../default';
 
+import { TraceSideInfo } from './sideInfo';
 import { useResolveTree } from './useResolveTree';
 
 const computeProgressWidth = () => {
@@ -45,6 +45,23 @@ const visibilityReducer = composeReducer(
     setValue((state, { path }) => [path], true)
   )
 );
+
+const Container = styled.div`
+  padding: 10px 0 5px 5px;
+  display: flex;
+`;
+
+const NodesContainer = styled.div`
+  display: flex;
+  flex-direction: column;
+`;
+const NodeListContainer = styled.div`
+  height: 100%;
+  overflow: auto;
+`;
+const NodeList = styled(List)`
+  overflow-x: hidden !important;
+`;
 
 export const OperationTrace = ({ operationId }) => {
   const progressWidth = useProgressWidth();
@@ -112,8 +129,8 @@ export const OperationTrace = ({ operationId }) => {
   const totalDuration = operation.tracing.duration;
 
   return (
-    <div className="operation-trace">
-      <div className="operation-trace-nodes">
+    <Container>
+      <NodesContainer>
         <TraceNode
           totalDuraton={totalDuration}
           meta={{
@@ -135,11 +152,10 @@ export const OperationTrace = ({ operationId }) => {
           childs={{}}
           progressWidth={progressWidth}
         />
-        <div className="operation-trace-nodes">
+        <NodeListContainer>
           <AutoSizer>
             {({ height, width }) => (
-              <List
-                className="operation-trace-nodes-list"
+              <NodeList
                 itemCount={traces.length}
                 height={height}
                 width={width}
@@ -158,17 +174,13 @@ export const OperationTrace = ({ operationId }) => {
                     progressWidth={progressWidth}
                   />
                 )}
-              </List>
+              </NodeList>
             )}
           </AutoSizer>
-        </div>
-      </div>
-      <div className="operation-side-info">
-        <div className="operation-side-info-section">Query</div>
-        <div className="operation-side-info-query">
-          <GqlQuery query={operation.query} />
-        </div>
-      </div>
-    </div>
+        </NodeListContainer>
+      </NodesContainer>
+
+      <TraceSideInfo query={operation.query} />
+    </Container>
   );
 };

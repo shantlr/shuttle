@@ -1,7 +1,26 @@
 import React, { useEffect, useState } from 'react';
 
 import PropTypes from 'prop-types';
-import './style.scss';
+import styled from 'styled-components';
+
+const Container = styled.div`
+  position: relative;
+  display: flex;
+  align-items: center;
+  height: 100%;
+`;
+const Push = styled.div``;
+const Thumb = styled.div`
+  height: 3px;
+  border-radius: 4px;
+  background-color: #4e67eb;
+  transition: width 0.6s cubic-bezier(0, 0.55, 0.45, 1);
+`;
+const Label = styled.div`
+  margin-left: 5px;
+  font-size: x-small;
+  color: rgba(0, 0, 0, 0.75);
+`;
 
 export const ProgressBar = ({ width, push = 0, percent = 1, label }) => {
   const [w, setWidth] = useState(0);
@@ -13,11 +32,11 @@ export const ProgressBar = ({ width, push = 0, percent = 1, label }) => {
   }, [width]);
 
   return (
-    <div className="progress-bar" style={{ width: width + 100 }}>
-      <div className="progress-bar-push" style={{ width: width * push }} />
-      <div className="progress-bar-thumb" style={{ width: w * percent }} />
-      <div className="progress-bar-label">{label}</div>
-    </div>
+    <Container style={{ width: width + 100 }}>
+      <Push style={{ width: width * push }} />
+      <Thumb style={{ width: w * percent }} />
+      <Label>{label}</Label>
+    </Container>
   );
 };
 ProgressBar.propTypes = {

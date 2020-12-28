@@ -1,6 +1,7 @@
 import React from 'react';
 
 import { Redirect, Route, Switch } from 'react-router-dom';
+import styled from 'styled-components';
 
 import { BASE_URL } from '../../config';
 import { ALL_API_KEY } from '../../data';
@@ -8,8 +9,6 @@ import { ALL_API_KEY } from '../../data';
 import { OperationTrace } from './content';
 import { DefaultContent } from './default';
 import { SideBar } from './sideBar';
-
-import './style.scss';
 
 export const OperationsView = () => {
   return (
@@ -28,12 +27,17 @@ export const OperationsView = () => {
   );
 };
 
+const Container = styled.div`
+  display: flex;
+  overflow: hidden;
+`;
+
 const OperationViewContent = ({ api, operationId }) => {
   return (
-    <div className="operation-view">
+    <Container>
       <SideBar selectedApi={api} selectedOperationId={operationId} />
       {operationId && <OperationTrace operationId={operationId} />}
       {!operationId && <DefaultContent />}
-    </div>
+    </Container>
   );
 };

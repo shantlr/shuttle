@@ -7,19 +7,38 @@ import React, {
 } from 'react';
 
 import { MenuItem, Select } from '@material-ui/core';
-import classnames from 'classnames';
 import { get, map, reduce, sortBy } from 'lodash';
 import { useSelector } from 'react-redux';
 import { useHistory } from 'react-router-dom';
+import styled from 'styled-components';
 
 import { BASE_URL } from '../../../config';
 import { ALL_API_KEY } from '../../../data';
-import { formatDuration } from '../../../utils';
 
 import { AddJsonOperation } from './addJsonOperation';
-import './style.scss';
+import { SideBarItem } from './item';
 
 const selectApis = (state) => state.operations.apis;
+
+const Container = styled.div`
+  height: 100%;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+`;
+const Header = styled.div`
+  padding: 10px 0 10px 10px;
+  display: flex;
+`;
+
+const SelectApi = styled(Select)`
+  width: 100%;
+`;
+
+const ListContainer = styled.div`
+  height: 100%;
+  overflow: auto;
+`;
 
 export const SideBar = ({ selectedApi, selectedOperationId }) => {
   const history = useHistory();
@@ -72,10 +91,9 @@ export const SideBar = ({ selectedApi, selectedOperationId }) => {
   const [width, setWidth] = useState(230);
 
   return (
-    <div className="side-bar" style={{ width, minWidth: width }}>
-      <div className="side-bar-header">
-        <Select
-          className="side-bar-select-api"
+    <Container style={{ width, minWidth: width }}>
+      <Header>
+        <SelectApi
           value={selectedApi}
           onChange={(e) => {
             history.push(`${BASE_URL}/operations/${e.target.value}`);
@@ -87,12 +105,11 @@ export const SideBar = ({ selectedApi, selectedOperationId }) => {
               {name !== ALL_API_KEY && <span>{name}</span>}
             </MenuItem>
           ))}
-        </Select>
+        </SelectApi>
         <AddJsonOperation />
-      </div>
+      </Header>
 
-      <div
-        className="side-bar-operation-list"
+      <ListContainer
         onScroll={(e) => {
           const height = e.target.offsetHeight;
           const scrollTop = e.target.scrollTop;
@@ -105,31 +122,20 @@ export const SideBar = ({ selectedApi, selectedOperationId }) => {
         }}
       >
         {map(operations, (op) => (
-          <div
+          <SideBarItem
             key={op.id}
-            className={classnames('side-bar-operation', {
-              'side-bar-operation-active': selectedOperationId === op.id,
-            })}
+            active={selectedOperationId === op.id}
+            origin={op.from}
+            name={op.operationName}
             onClick={() => {
               history.push(`${BASE_URL}/operations/${selectedApi}/${op.id}`);
             }}
-          >
-            <div className="side-bar-operation-from">[{op.from}]</div>
-            <div
-              className={classnames('side-bar-operation-name', {
-                'side-bar-operation-name-missing': !op.operationName,
-              })}
-            >
-              {op.operationName || 'Unknown'}
-            </div>
-            <div className="side-bar-operation-duration">
-              <div>{formatDuration(op.tracing.duration)}</div>
-            </div>
-          </div>
+            duration={op.duration}
+          />
         ))}
 
         <div ref={scrollRef} />
-      </div>
-    </div>
+      </ListContainer>
+    </Container>
   );
 };

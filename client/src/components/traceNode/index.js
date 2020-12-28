@@ -8,14 +8,6 @@ import { ProgressBar } from '../progressBar';
 
 const Container = styled.div``;
 
-const Line = styled.div`
-  display: flex;
-  background-color: ${(props) => (props.hidden ? '#f5f5f5' : 'transparent')};
-  :hover {
-    cursor: pointer;
-    background-color: aliceblue;
-  }
-`;
 const Title = styled.div`
   border-right: 1px solid rgba(0, 0, 0, 0.1);
   box-sizing: border-box;
@@ -24,11 +16,20 @@ const Title = styled.div`
   overflow: hidden;
   padding-bottom: 2px;
   margin-right: 5px;
+`;
+
+const Line = styled.div`
+  display: flex;
+  background-color: ${(props) => (props.hidden ? '#f5f5f5' : 'transparent')};
   :hover {
-    background-color: aliceblue;
-    overflow: visible;
+    cursor: pointer;
+    background-color: #f0f4ff;
+    ${Title} {
+      overflow: visible;
+    }
   }
 `;
+
 const TitleIdent = styled.span`
   color: rgba(0, 0, 0, 0.1);
 `;
