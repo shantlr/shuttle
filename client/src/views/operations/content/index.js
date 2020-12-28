@@ -1,42 +1,21 @@
-import React, { useCallback, useEffect, useMemo, useState } from 'react';
+import React, {
+  useCallback,
+  useEffect,
+  useMemo,
+  useReducer,
+  useState,
+} from 'react';
 
-import { initial, last, map } from 'lodash';
+import { branch, composeReducer, setValue, unsetValue } from 'compose-reducer';
+import { forEach, get } from 'lodash';
 import { useSelector } from 'react-redux';
+import AutoSizer from 'react-virtualized-auto-sizer';
+import { FixedSizeList as List } from 'react-window';
 
 import { GqlQuery } from '../../../components/gqlQuery';
 import { TraceNode } from '../../../components/traceNode';
 import './style.scss';
 import { DefaultContent } from '../default';
-
-const getNode = (tree, path) => {
-  let current = tree;
-
-  for (let i = 0; i < path.length; i += 1) {
-    const key = path[i];
-    if (!current.childs[key]) {
-      current.childs[key] = {
-        childs: {},
-      };
-    }
-    current = current.childs[key];
-  }
-
-  return current;
-};
-const toTree = (execution) => {
-  const root = { childs: {} };
-
-  execution.resolvers.forEach((r) => {
-    const parent = initial(r.path);
-    const child = last(r.path);
-    const node = getNode(root, parent);
-    node.childs[child] = {
-      meta: r,
-      childs: {},
-    };
-  });
-  return root;
-};
 
 const computeProgressWidth = () => {
   const winWidth = window.innerWidth;
@@ -57,6 +36,14 @@ const useProgressWidth = () => {
   return width;
 };
 
+const visibilityReducer = composeReducer(
+  branch(
+    (state, { path }) => state[path],
+    unsetValue((state, { path }) => [path]),
+    setValue((state, { path }) => [path], true)
+  )
+);
+
 export const OperationTrace = ({ operationId }) => {
   const progressWidth = useProgressWidth();
   const operation = useSelector(
@@ -68,13 +55,99 @@ export const OperationTrace = ({ operationId }) => {
     )
   );
 
+  const [hiddenNodes, dispatchVisiblity] = useReducer(
+    visibilityReducer,
+    null,
+    () => ({})
+  );
+  const onVisibilityChange = useCallback(({ path }) => {
+    dispatchVisiblity({
+      path: path.join('.'),
+    });
+  }, []);
+
+  const resolvers = get(operation, 'tracing.execution.resolvers');
+
   const tree = useMemo(() => {
-    if (!operation) {
-      return null;
+    const res = {
+      isRoot: true,
+      childs: {},
+    };
+
+    if (resolvers) {
+      resolvers.forEach((node) => {
+        let p = res;
+        const { path } = node;
+        for (let i = 0; i < path.length; i += 1) {
+          const k = path[i];
+          if (!p.childs[k]) {
+            const n = {
+              parent: p,
+              childs: {},
+            };
+
+            if (!p.isArray && typeof k === 'number') {
+              p.isArray = true;
+              p.node = {
+                path: path.slice(0, i),
+                fieldName: path[i - 1],
+              };
+              // Add array elem node
+            }
+
+            p.childs[k] = n;
+          }
+
+          if (typeof k === 'number' && !p.childs[k].node) {
+            p.childs[k].node = {
+              parent: p,
+              path: path.slice(0, i + 1),
+              fieldName: `${path[i - 1]}:${k}`,
+            };
+          }
+          p = p.childs[k];
+        }
+        if (
+          node.path.length >= 2 &&
+          typeof node.path[node.path.length - 2] === 'number'
+        ) {
+          if (p.parent && p.parent.node && !p.parent.node.returnType) {
+            p.parent.node.returnType = node.parentType;
+            const parent = p.parent;
+            if (parent.parent && parent.parent.node) {
+              parent.parent.node.returnType = `[${node.parentType}]`;
+            }
+          }
+        }
+
+        p.node = node;
+      });
     }
-    const execution = operation.tracing.execution;
-    return toTree(execution);
-  }, [operation]);
+    return res;
+  }, [resolvers]);
+
+  const traces = useMemo(() => {
+    const res = [];
+    const addNode = (nodes, parent) => {
+      forEach(nodes, (node) => {
+        if (node.node) {
+          res.push(node.node);
+
+          // Hidden node => do not render childs
+          const key = node.node.path.join('.');
+          if (hiddenNodes[key]) {
+            return;
+          }
+        }
+
+        if (node.childs) {
+          addNode(node.childs, node);
+        }
+      });
+    };
+    addNode(tree.childs, tree);
+    return res;
+  }, [hiddenNodes, tree]);
 
   if (!operation) {
     return <DefaultContent />;
@@ -107,15 +180,28 @@ export const OperationTrace = ({ operationId }) => {
           progressWidth={progressWidth}
         />
         <div className="operation-trace-nodes">
-          {map(tree.childs, ({ meta, childs }, key) => (
-            <TraceNode
-              key={key}
-              totalDuraton={totalDuration}
-              meta={meta}
-              childs={childs}
-              progressWidth={progressWidth}
-            />
-          ))}
+          <AutoSizer>
+            {({ height, width }) => (
+              <List
+                className="operation-trace-nodes-list"
+                itemCount={traces.length}
+                height={height}
+                width={width}
+                itemSize={20}
+              >
+                {({ index, style }) => (
+                  <TraceNode
+                    style={style}
+                    totalDuraton={totalDuration}
+                    meta={traces[index]}
+                    onVisibilityChange={onVisibilityChange}
+                    childs={{}}
+                    progressWidth={progressWidth}
+                  />
+                )}
+              </List>
+            )}
+          </AutoSizer>
         </div>
       </div>
       <div className="operation-side-info">

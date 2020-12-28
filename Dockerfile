@@ -25,7 +25,6 @@ RUN yarn install
 WORKDIR /app/client
 COPY ./client .
 RUN yarn build
-RUN ls
 RUN mv build ../dist/public
 
 # Server build server

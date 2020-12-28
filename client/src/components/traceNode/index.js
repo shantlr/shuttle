@@ -1,33 +1,32 @@
 import React, { useMemo, useState } from 'react';
 
-import { map } from 'lodash';
+import { size } from 'lodash';
 
 import { formatDuration } from '../../utils';
 import { ProgressBar } from '../progressBar';
 import './style.scss';
 
 export const TraceNode = ({
+  style,
   totalDuraton,
+  onVisibilityChange,
   meta,
-  childs,
   progressWidth = 500,
-  depth = 0,
 }) => {
   const [showChilds, setShowChilds] = useState(true);
 
   let indent = [];
-  for (let i = 0; i < depth; i += 1) {
+  for (let i = 0; i < size(meta.path) - 1; i += 1) {
     indent.push(<React.Fragment key={i}>&nbsp;&bull;</React.Fragment>);
   }
 
-  const hasChilds = useMemo(() => Object.keys(childs).length > 0, [childs]);
-
   return (
-    <div className="trace-node">
+    <div className="trace-node" style={style}>
       {Boolean(meta) && (
         <div
           className="trace-node-line"
-          onClick={() => hasChilds && setShowChilds(!showChilds)}
+          onClick={() => onVisibilityChange({ path: meta.path })}
+          // onClick={() => hasChilds && setShowChilds(!showChilds)}
         >
           <div className="trace-node-name-title">
             <span className="trace-node-indent">{indent}</span>
@@ -35,9 +34,9 @@ export const TraceNode = ({
               {meta.fieldName}
             </span>
             <span className="trace-node-type">{meta.returnType}</span>
-            {hasChilds && !showChilds && (
+            {/* {hasChilds && !showChilds && (
               <span className="trace-node-more">&nbsp;...</span>
-            )}
+            )} */}
           </div>
           <div className="trace-node-progress">
             <ProgressBar
@@ -47,20 +46,6 @@ export const TraceNode = ({
               label={formatDuration(meta.duration)}
             />
           </div>
-        </div>
-      )}
-      {showChilds && (
-        <div className="trace-node-childs">
-          {map(childs, (child, key) => (
-            <TraceNode
-              totalDuraton={totalDuraton}
-              depth={depth + (Boolean(meta) ? 1 : 0)}
-              key={key}
-              meta={child.meta}
-              childs={child.childs}
-              progressWidth={progressWidth}
-            />
-          ))}
         </div>
       )}
     </div>
