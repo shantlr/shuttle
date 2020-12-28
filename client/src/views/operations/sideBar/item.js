@@ -35,7 +35,14 @@ const Duration = styled.div`
   font-size: smaller;
 `;
 
-export const SideBarItem = ({ active, origin, name, onClick, duration }) => {
+export const SideBarItem = ({
+  active,
+  origin,
+  name,
+  onClick,
+  date,
+  duration,
+}) => {
   return (
     <Container onClick={onClick} active={active}>
       <Origin>[{origin}]</Origin>
