@@ -24,5 +24,9 @@ ProgressBar.propTypes = {
   width: PropTypes.number,
   push: PropTypes.number,
   percent: PropTypes.number,
-  label: PropTypes.string,
+  label: PropTypes.oneOfType([
+    PropTypes.string,
+    PropTypes.number,
+    PropTypes.element,
+  ]),
 };

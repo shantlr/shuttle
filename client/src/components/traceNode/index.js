@@ -1,53 +1,91 @@
-import React, { useMemo, useState } from 'react';
+import React from 'react';
 
 import { size } from 'lodash';
+import styled from 'styled-components';
 
 import { formatDuration } from '../../utils';
 import { ProgressBar } from '../progressBar';
-import './style.scss';
+
+const Container = styled.div``;
+
+const Line = styled.div`
+  display: flex;
+  background-color: ${(props) => (props.hidden ? '#f5f5f5' : 'transparent')};
+  :hover {
+    cursor: pointer;
+    background-color: aliceblue;
+  }
+`;
+const Title = styled.div`
+  border-right: 1px solid rgba(0, 0, 0, 0.1);
+  box-sizing: border-box;
+  width: 250px;
+  min-width: 250px;
+  overflow: hidden;
+  padding-bottom: 2px;
+  margin-right: 5px;
+  :hover {
+    background-color: aliceblue;
+    overflow: visible;
+  }
+`;
+const TitleIdent = styled.span`
+  color: rgba(0, 0, 0, 0.1);
+`;
+const TitleName = styled.span`
+  font-size: small;
+  margin-right: 5px;
+  padding-left: 5px;
+`;
+const NodeType = styled.span`
+  color: rgba(0, 0, 0, 0.5);
+  font-size: x-small;
+`;
+
+const ProgressContainer = styled.div``;
 
 export const TraceNode = ({
   style,
   totalDuraton,
   onVisibilityChange,
   meta,
+  hasChilds,
+  childHidden,
   progressWidth = 500,
 }) => {
-  const [showChilds, setShowChilds] = useState(true);
-
   let indent = [];
   for (let i = 0; i < size(meta.path) - 1; i += 1) {
     indent.push(<React.Fragment key={i}>&nbsp;&bull;</React.Fragment>);
   }
 
   return (
-    <div className="trace-node" style={style}>
+    <Container style={style}>
       {Boolean(meta) && (
-        <div
-          className="trace-node-line"
-          onClick={() => onVisibilityChange({ path: meta.path })}
-          // onClick={() => hasChilds && setShowChilds(!showChilds)}
+        <Line
+          hidden={childHidden}
+          onClick={() =>
+            onVisibilityChange &&
+            hasChilds &&
+            onVisibilityChange({ path: meta.path })
+          }
         >
-          <div className="trace-node-name-title">
-            <span className="trace-node-indent">{indent}</span>
-            <span className="trace-node-name" style={{ paddingLeft: 5 }}>
-              {meta.fieldName}
-            </span>
-            <span className="trace-node-type">{meta.returnType}</span>
-            {/* {hasChilds && !showChilds && (
-              <span className="trace-node-more">&nbsp;...</span>
-            )} */}
-          </div>
-          <div className="trace-node-progress">
-            <ProgressBar
-              width={progressWidth || 0}
-              push={meta.startOffset / totalDuraton || 0}
-              percent={meta.duration / totalDuraton || 0}
-              label={formatDuration(meta.duration)}
-            />
-          </div>
-        </div>
+          <Title>
+            <TitleIdent>{indent}</TitleIdent>
+            <TitleName>{meta.fieldName}</TitleName>
+            <NodeType>{meta.returnType}</NodeType>
+          </Title>
+          <ProgressContainer>
+            {typeof meta.duration === 'number' && (
+              <ProgressBar
+                width={progressWidth || 0}
+                push={meta.startOffset / totalDuraton || 0}
+                percent={meta.duration / totalDuraton || 0}
+                label={formatDuration(meta.duration)}
+              />
+            )}
+          </ProgressContainer>
+        </Line>
       )}
-    </div>
+    </Container>
   );
 };
