@@ -11,6 +11,8 @@ WORKDIR /app/dist
 WORKDIR /app/client
 
 COPY "./client/package.json" .
+COPY "./client/yarn.lock" .
+
 RUN yarn install
 
 RUN apk del .gyp
@@ -19,6 +21,7 @@ RUN apk del .gyp
 WORKDIR /app/server
 
 COPY "./server/package.json" .
+COPY "./server/yarn.lock" .
 RUN yarn install
 
 # Client build front
