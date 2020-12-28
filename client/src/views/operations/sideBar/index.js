@@ -93,7 +93,6 @@ export const SideBar = ({ selectedApi, selectedOperationId }) => {
   }, [operations]);
 
   const [width, setWidth] = useState(230);
-  console.log(operations);
 
   return (
     <Container style={{ width, minWidth: width }}>
