@@ -10,10 +10,14 @@ import {
   mapActions,
 } from 'compose-reducer';
 
-import { ADD_OPERATION, CLEAR_ALL_OPERATIONS } from '../actions';
+import {
+  ADD_OPERATION,
+  CLEAR_ALL_OPERATIONS,
+  UPDATE_VIEW_OPERATION_LIST_WIDTH_DELTA,
+} from '../actions';
 import { ALL_API_KEY } from '../config';
 
-const operations = composable(
+const initialState = composable(
   initState({
     apis: {
       [ALL_API_KEY]: {
@@ -21,7 +25,11 @@ const operations = composable(
       },
     },
     ops: {},
-  }),
+  })
+);
+
+const operations = composable(
+  initialState,
   branchAction({
     [ADD_OPERATION]: composable(
       setValue(
@@ -53,4 +61,20 @@ const operations = composable(
   })
 );
 
-export const reducer = composeReducer(at('operations', operations));
+const views = composable(
+  initState({
+    opListWidth: 230,
+  }),
+  branchAction({
+    [UPDATE_VIEW_OPERATION_LIST_WIDTH_DELTA]: setValue(
+      'opListWidth',
+      (state, action) =>
+        Math.max((state.opListWidth || 230) + action.delta, 200)
+    ),
+  })
+);
+
+export const reducer = composeReducer(
+  at('operations', operations),
+  at('view', views)
+);

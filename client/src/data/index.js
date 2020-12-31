@@ -4,6 +4,8 @@ import storage from 'redux-persist/lib/storage';
 
 import { reducer } from './reducer';
 
+export * from './actions';
+export * from './selectors';
 export * from './config';
 
 const composeEnhancer = window.__REDUX_DEVTOOLS_EXTENSION__ || compose;

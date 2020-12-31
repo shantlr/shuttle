@@ -1,10 +1,4 @@
-import React, {
-  useCallback,
-  useEffect,
-  useMemo,
-  useRef,
-  useState,
-} from 'react';
+import React, { useCallback, useEffect, useMemo, useRef } from 'react';
 
 import { IconButton, MenuItem, Select } from '@material-ui/core';
 import ClearIcon from '@material-ui/icons/Delete';
@@ -13,9 +7,13 @@ import { useDispatch, useSelector } from 'react-redux';
 import { useHistory } from 'react-router-dom';
 import styled from 'styled-components';
 
+import { DraggableHandle } from '../../../components/draggableHandle';
 import { BASE_URL } from '../../../config';
-import { ALL_API_KEY } from '../../../data';
-import { clearAllOperations } from '../../../data/actions';
+import { ALL_API_KEY, selectViewOpListWidth } from '../../../data';
+import {
+  clearAllOperations,
+  updateViewOperationListWidthDelta,
+} from '../../../data/actions';
 
 import { AddJsonOperation } from './addJsonOperation';
 import { SideBarItem } from './item';
@@ -92,58 +90,69 @@ export const SideBar = ({ selectedApi, selectedOperationId }) => {
     }
   }, [operations]);
 
-  const [width, setWidth] = useState(230);
+  const width = useSelector(selectViewOpListWidth);
 
   return (
-    <Container style={{ width, minWidth: width }}>
-      <Header>
-        <IconButton size="small" onClick={() => dispatch(clearAllOperations())}>
-          <ClearIcon />
-        </IconButton>
-        <SelectApi
-          value={selectedApi}
-          onChange={(e) => {
-            history.push(`${BASE_URL}/operations/${e.target.value}`);
+    <>
+      <Container style={{ width, minWidth: width }}>
+        <Header>
+          <IconButton
+            size="small"
+            onClick={() => dispatch(clearAllOperations())}
+          >
+            <ClearIcon />
+          </IconButton>
+          <SelectApi
+            value={selectedApi}
+            onChange={(e) => {
+              history.push(`${BASE_URL}/operations/${e.target.value}`);
+            }}
+          >
+            {apiNames.map((name) => (
+              <MenuItem key={name} value={name}>
+                {name === ALL_API_KEY && <span>All</span>}
+                {name !== ALL_API_KEY && <span>{name}</span>}
+              </MenuItem>
+            ))}
+          </SelectApi>
+          <AddJsonOperation />
+        </Header>
+
+        <ListContainer
+          onScroll={(e) => {
+            const height = e.target.offsetHeight;
+            const scrollTop = e.target.scrollTop;
+            const totalHeight = e.target.scrollHeight;
+            if (scrollTop + height === totalHeight) {
+              isScrollBottomRef.current = true;
+            } else {
+              isScrollBottomRef.current = false;
+            }
           }}
         >
-          {apiNames.map((name) => (
-            <MenuItem key={name} value={name}>
-              {name === ALL_API_KEY && <span>All</span>}
-              {name !== ALL_API_KEY && <span>{name}</span>}
-            </MenuItem>
+          {map(operations, (op) => (
+            <SideBarItem
+              key={op.id}
+              active={selectedOperationId === op.id}
+              origin={op.from}
+              name={op.operationName}
+              onClick={() => {
+                history.push(`${BASE_URL}/operations/${selectedApi}/${op.id}`);
+              }}
+              date={op.date}
+              duration={op.tracing.duration}
+            />
           ))}
-        </SelectApi>
-        <AddJsonOperation />
-      </Header>
 
-      <ListContainer
-        onScroll={(e) => {
-          const height = e.target.offsetHeight;
-          const scrollTop = e.target.scrollTop;
-          const totalHeight = e.target.scrollHeight;
-          if (scrollTop + height === totalHeight) {
-            isScrollBottomRef.current = true;
-          } else {
-            isScrollBottomRef.current = false;
-          }
-        }}
-      >
-        {map(operations, (op) => (
-          <SideBarItem
-            key={op.id}
-            active={selectedOperationId === op.id}
-            origin={op.from}
-            name={op.operationName}
-            onClick={() => {
-              history.push(`${BASE_URL}/operations/${selectedApi}/${op.id}`);
-            }}
-            date={op.date}
-            duration={op.tracing.duration}
-          />
-        ))}
-
-        <div ref={scrollRef} />
-      </ListContainer>
-    </Container>
+          <div ref={scrollRef} />
+        </ListContainer>
+      </Container>
+      <DraggableHandle
+        x={width}
+        onChangeDelta={(delta) =>
+          dispatch(updateViewOperationListWidthDelta(delta))
+        }
+      />
+    </>
   );
 };
