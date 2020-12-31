@@ -1,10 +1,4 @@
-import React, {
-  useCallback,
-  useEffect,
-  useMemo,
-  useReducer,
-  useState,
-} from 'react';
+import React, { useCallback, useMemo, useReducer } from 'react';
 
 import { branch, composeReducer, setValue, unsetValue } from 'compose-reducer';
 import { forEach, get } from 'lodash';
@@ -18,25 +12,6 @@ import { DefaultContent } from '../default';
 
 import { TraceSideInfo } from './sideInfo';
 import { useResolveTree } from './useResolveTree';
-
-const computeProgressWidth = () => {
-  const winWidth = window.innerWidth;
-  if (winWidth < 1100) {
-    return 300;
-  }
-  return Math.min(650, winWidth - 800);
-};
-const useProgressWidth = () => {
-  const [width, setWidth] = useState(() => computeProgressWidth());
-  useEffect(() => {
-    const listener = () => {
-      setWidth(computeProgressWidth());
-    };
-    window.addEventListener('resize', listener);
-    return () => window.removeEventListener('resize', listener);
-  }, []);
-  return width;
-};
 
 const visibilityReducer = composeReducer(
   branch(
@@ -63,8 +38,7 @@ const NodeList = styled(List)`
   overflow-x: hidden !important;
 `;
 
-export const OperationTrace = ({ operationId }) => {
-  const progressWidth = useProgressWidth();
+export const OperationTrace = ({ operationId, traceWidth, infoWidth }) => {
   const operation = useSelector(
     useCallback(
       (state) => {
@@ -127,10 +101,11 @@ export const OperationTrace = ({ operationId }) => {
   }
 
   const totalDuration = operation.tracing.duration;
+  const progressWidth = traceWidth - 250;
 
   return (
     <Container>
-      <NodesContainer>
+      <NodesContainer style={{ width: traceWidth }}>
         <TraceNode
           totalDuraton={totalDuration}
           meta={{
@@ -153,12 +128,12 @@ export const OperationTrace = ({ operationId }) => {
           progressWidth={progressWidth}
         />
         <NodeListContainer>
-          <AutoSizer>
-            {({ height, width }) => (
+          <AutoSizer disableWidth>
+            {({ height }) => (
               <NodeList
                 itemCount={traces.length}
                 height={height}
-                width={width}
+                width={traceWidth}
                 itemSize={20}
                 itemKey={itemKey}
               >
@@ -180,7 +155,7 @@ export const OperationTrace = ({ operationId }) => {
         </NodeListContainer>
       </NodesContainer>
 
-      <TraceSideInfo query={operation.query} />
+      <TraceSideInfo width={infoWidth} query={operation.query} />
     </Container>
   );
 };

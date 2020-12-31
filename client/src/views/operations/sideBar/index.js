@@ -9,7 +9,7 @@ import styled from 'styled-components';
 
 import { DraggableHandle } from '../../../components/draggableHandle';
 import { BASE_URL } from '../../../config';
-import { ALL_API_KEY, selectViewOpListWidth } from '../../../data';
+import { ALL_API_KEY } from '../../../data';
 import {
   clearAllOperations,
   updateViewOperationListWidthDelta,
@@ -41,7 +41,7 @@ const ListContainer = styled.div`
   overflow: auto;
 `;
 
-export const SideBar = ({ selectedApi, selectedOperationId }) => {
+export const SideBar = ({ width, selectedApi, selectedOperationId }) => {
   const history = useHistory();
   const apis = Object.keys(useSelector(selectApis));
   const dispatch = useDispatch();
@@ -89,8 +89,6 @@ export const SideBar = ({ selectedApi, selectedOperationId }) => {
       scrollRef.current.scrollIntoView({});
     }
   }, [operations]);
-
-  const width = useSelector(selectViewOpListWidth);
 
   return (
     <>

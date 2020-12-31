@@ -1,10 +1,11 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 
+import { useSelector } from 'react-redux';
 import { Redirect, Route, Switch } from 'react-router-dom';
 import styled from 'styled-components';
 
 import { BASE_URL } from '../../config';
-import { ALL_API_KEY } from '../../data';
+import { ALL_API_KEY, selectViewOpListWidth } from '../../data';
 
 import { OperationTrace } from './content';
 import { DefaultContent } from './default';
@@ -32,11 +33,40 @@ const Container = styled.div`
   overflow: hidden;
 `;
 
+const useWidth = () => {
+  const [width, setWidth] = useState(() => window.innerWidth);
+  useEffect(() => {
+    const handler = () => {
+      setWidth(window.innerWidth);
+    };
+    window.addEventListener('resize', handler);
+    return () => window.removeEventListener('resize', handler);
+  }, []);
+  return width;
+};
+
 const OperationViewContent = ({ api, operationId }) => {
+  const width = useWidth();
+  const sideWidth = useSelector(selectViewOpListWidth);
+
+  const remainWidth = width - (sideWidth + 10);
+  const infoWidth = remainWidth * 0.25;
+  const tracesWidth = remainWidth - infoWidth;
+
   return (
     <Container>
-      <SideBar selectedApi={api} selectedOperationId={operationId} />
-      {operationId && <OperationTrace operationId={operationId} />}
+      <SideBar
+        width={sideWidth}
+        selectedApi={api}
+        selectedOperationId={operationId}
+      />
+      {operationId && (
+        <OperationTrace
+          operationId={operationId}
+          traceWidth={tracesWidth}
+          infoWidth={infoWidth}
+        />
+      )}
       {!operationId && <DefaultContent />}
     </Container>
   );

@@ -16,9 +16,9 @@ const Query = styled.div`
   font-size: x-small;
 `;
 
-export const TraceSideInfo = ({ query }) => {
+export const TraceSideInfo = ({ width, query }) => {
   return (
-    <Container>
+    <Container style={{ width }}>
       <Title>Query</Title>
       <Query>
         <GqlQuery query={query} />

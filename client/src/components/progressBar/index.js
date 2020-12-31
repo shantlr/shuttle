@@ -24,16 +24,20 @@ const Label = styled.div`
 
 export const ProgressBar = ({ width, push = 0, percent = 1, label }) => {
   const [w, setWidth] = useState(0);
+
+  // keep some space for label
+  const actualWidth = width - 100;
+
   useEffect(() => {
     const id = requestAnimationFrame(() => {
-      setWidth(width);
+      setWidth(actualWidth);
     });
     return () => cancelAnimationFrame(id);
-  }, [width]);
+  }, [actualWidth]);
 
   return (
-    <Container style={{ width: width + 100 }}>
-      <Push style={{ width: width * push }} />
+    <Container style={{ width: width }}>
+      <Push style={{ width: w * push }} />
       <Thumb style={{ width: w * percent }} />
       <Label>{label}</Label>
     </Container>

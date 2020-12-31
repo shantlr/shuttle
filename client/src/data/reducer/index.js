@@ -64,6 +64,7 @@ const operations = composable(
 const views = composable(
   initState({
     opListWidth: 230,
+    sideInfoPercent: 0.25,
   }),
   branchAction({
     [UPDATE_VIEW_OPERATION_LIST_WIDTH_DELTA]: setValue(
