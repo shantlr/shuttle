@@ -3,7 +3,7 @@ import React, { useMemo } from 'react';
 import classnames from 'classnames';
 
 import { formatGql } from '../../utils/formatter';
-import './style.scss';
+import './style.css';
 
 const cssMapping = {
   op: 'gql-node-operation',

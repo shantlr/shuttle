@@ -4,12 +4,18 @@ import { Provider, useDispatch } from 'react-redux';
 import { BrowserRouter as Router } from 'react-router-dom';
 import { PersistGate } from 'redux-persist/integration/react';
 import io from 'socket.io-client';
+import styled from 'styled-components';
 
 import { API_URL } from '../config';
 import { persistor, store } from '../data';
 import { addOperation } from '../data/actions';
 import { OperationsView } from '../views/operations';
-import './style.scss';
+
+const RootContainer = styled.div`
+  width: 100vw;
+  height: 100vh;
+  display: flex;
+`;
 
 export const RootApp = () => {
   return (
@@ -17,9 +23,9 @@ export const RootApp = () => {
       <Provider store={store}>
         <PersistGate loading={null} persistor={persistor}>
           <Connection>
-            <div className="root-app">
+            <RootContainer>
               <OperationsView />
-            </div>
+            </RootContainer>
           </Connection>
         </PersistGate>
       </Provider>

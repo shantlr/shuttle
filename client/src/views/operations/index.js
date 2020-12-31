@@ -4,7 +4,6 @@ import { useSelector } from 'react-redux';
 import { Redirect, Route, Switch } from 'react-router-dom';
 import styled from 'styled-components';
 
-import { DraggableHandle } from '../../components/draggableHandle';
 import { BASE_URL } from '../../config';
 import { ALL_API_KEY, selectViewOpListWidth } from '../../data';
 import { selectViewSideInfoWidthPercent } from '../../data/selectors';

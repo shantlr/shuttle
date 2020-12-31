@@ -3,9 +3,8 @@ import React, { useEffect, useRef, useState } from 'react';
 import { Button, IconButton, Popover, TextField } from '@material-ui/core';
 import AddIcon from '@material-ui/icons/Add';
 import { useDispatch } from 'react-redux';
+import styled from 'styled-components';
 import * as yup from 'yup';
-
-import './style.scss';
 
 import { addOperation } from '../../../../data/actions';
 
@@ -71,6 +70,22 @@ const traceSchema = yup.object().shape({
   }),
 });
 
+const JsonContainer = styled.div`
+  padding: 10px;
+  min-width: 500px;
+`;
+const TextInput = styled(TextField)`
+  width: 100%;
+  textarea {
+    font-size: xx-small;
+  }
+`;
+const SubmitContainer = styled.div`
+  margin-top: 5px;
+  display: flex;
+  justify-content: flex-end;
+`;
+
 const JsonOperation = ({ onSubmit }) => {
   const [api, setApi] = useState('manual');
   const [json, setJson] = useState('');
@@ -107,8 +122,8 @@ const JsonOperation = ({ onSubmit }) => {
   }, [json]);
 
   return (
-    <div className="add-json-operation">
-      <div className="add-json-operation-title">Add manual trace json</div>
+    <JsonContainer>
+      <div>Add manual trace json</div>
       <div>
         <TextField
           label="Api"
@@ -117,16 +132,15 @@ const JsonOperation = ({ onSubmit }) => {
         />
       </div>
       <div>
-        <TextField
+        <TextInput
           label="JSON"
-          className="add-json-operation-json-input"
           value={json}
           onChange={(e) => setJson(e.target.value)}
           multiline
           {...jsonErr}
         />
       </div>
-      <div className="add-json-operation-submit">
+      <SubmitContainer>
         <Button
           disabled={!json || Boolean(jsonErr)}
           type="primary"
@@ -142,7 +156,7 @@ const JsonOperation = ({ onSubmit }) => {
         >
           Add
         </Button>
-      </div>
-    </div>
+      </SubmitContainer>
+    </JsonContainer>
   );
 };
