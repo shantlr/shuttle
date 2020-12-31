@@ -3,8 +3,12 @@ import styled from 'styled-components';
 import { GqlQuery } from '../../../../components/gqlQuery';
 
 const Container = styled.div`
-  padding-left: 5px;
   overflow: auto;
+  display: flex;
+`;
+
+const InfoContainer = styled.div`
+  padding: 5px;
 `;
 
 const Title = styled.div`
@@ -19,10 +23,12 @@ const Query = styled.div`
 export const TraceSideInfo = ({ width, query }) => {
   return (
     <Container style={{ width }}>
-      <Title>Query</Title>
-      <Query>
-        <GqlQuery query={query} />
-      </Query>
+      <InfoContainer>
+        <Title>Query</Title>
+        <Query>
+          <GqlQuery query={query} />
+        </Query>
+      </InfoContainer>
     </Container>
   );
 };

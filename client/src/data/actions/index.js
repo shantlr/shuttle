@@ -21,4 +21,9 @@ export const updateViewOperationListWidthDelta = (delta) => ({
   delta,
 });
 
-export const UPDATE_VIEW_QUERY_SIDE_WIDTH = 'UPDATE_VIEW_QUERY_SIDE_WIDTH';
+export const UPDATE_VIEW_QUERY_SIDE_WIDTH_PERCENT =
+  'UPDATE_VIEW_QUERY_SIDE_WIDTH_PERCENT';
+export const updateViewQuerySideWidthPercent = (percent) => ({
+  type: UPDATE_VIEW_QUERY_SIDE_WIDTH_PERCENT,
+  percent,
+});

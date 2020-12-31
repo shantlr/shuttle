@@ -1,4 +1,3 @@
-import DragIndicatorIcon from '@material-ui/icons/DragIndicator';
 import Draggable from 'react-draggable';
 import styled from 'styled-components';
 
@@ -10,20 +9,31 @@ const Container = styled.div`
   justify-content: center;
   background-color: rgba(0, 0, 0, 0.1);
 `;
+const Handle = styled.div`
+  height: 20px;
+  width: 3px;
+  margin: 0 2px;
+  border-radius: 35px;
+  background-color: black;
+`;
 
-export const DraggableHandle = ({ onChangeDelta }) => {
+export const DraggableHandle = ({ style, onChange, onChangeDelta }) => {
   return (
     <Draggable
       axis="x"
       defaultPosition={{ x: 0, y: 0 }}
       position={{ x: 0, y: 0 }}
       onStop={(e, data) => {
-        // console.log(data);
-        onChangeDelta(data.x);
+        if (onChange) {
+          onChange(data.x);
+        }
+        if (onChangeDelta) {
+          onChangeDelta(data.x);
+        }
       }}
     >
-      <Container>
-        <DragIndicatorIcon style={{ fontSize: 10 }} />
+      <Container style={style}>
+        <Handle />
       </Container>
     </Draggable>
   );

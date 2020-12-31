@@ -14,6 +14,7 @@ import {
   ADD_OPERATION,
   CLEAR_ALL_OPERATIONS,
   UPDATE_VIEW_OPERATION_LIST_WIDTH_DELTA,
+  UPDATE_VIEW_QUERY_SIDE_WIDTH_PERCENT,
 } from '../actions';
 import { ALL_API_KEY } from '../config';
 
@@ -71,6 +72,10 @@ const views = composable(
       'opListWidth',
       (state, action) =>
         Math.max((state.opListWidth || 230) + action.delta, 200)
+    ),
+    [UPDATE_VIEW_QUERY_SIDE_WIDTH_PERCENT]: setValue(
+      'sideInfoPercent',
+      (state, action) => Math.max(0.1, Math.min(action.percent, 0.9))
     ),
   })
 );

@@ -2,12 +2,14 @@ import React, { useCallback, useMemo, useReducer } from 'react';
 
 import { branch, composeReducer, setValue, unsetValue } from 'compose-reducer';
 import { forEach, get } from 'lodash';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import AutoSizer from 'react-virtualized-auto-sizer';
 import { FixedSizeList as List } from 'react-window';
 import styled from 'styled-components';
 
+import { DraggableHandle } from '../../../components/draggableHandle';
 import { TraceNode } from '../../../components/traceNode';
+import { updateViewQuerySideWidthPercent } from '../../../data';
 import { DefaultContent } from '../default';
 
 import { TraceSideInfo } from './sideInfo';
@@ -38,7 +40,10 @@ const NodeList = styled(List)`
   overflow-x: hidden !important;
 `;
 
+const RESOLVER_NAME_WIDTH = 250;
+
 export const OperationTrace = ({ operationId, traceWidth, infoWidth }) => {
+  const dispatch = useDispatch();
   const operation = useSelector(
     useCallback(
       (state) => {
@@ -101,7 +106,8 @@ export const OperationTrace = ({ operationId, traceWidth, infoWidth }) => {
   }
 
   const totalDuration = operation.tracing.duration;
-  const progressWidth = traceWidth - 250;
+  const progressWidth = traceWidth - RESOLVER_NAME_WIDTH;
+  const totalWidth = traceWidth + infoWidth;
 
   return (
     <Container>
@@ -154,6 +160,15 @@ export const OperationTrace = ({ operationId, traceWidth, infoWidth }) => {
           </AutoSizer>
         </NodeListContainer>
       </NodesContainer>
+
+      <DraggableHandle
+        style={{ margin: '0 2px' }}
+        onChange={(width) => {
+          dispatch(
+            updateViewQuerySideWidthPercent((infoWidth + -width) / totalWidth)
+          );
+        }}
+      />
 
       <TraceSideInfo width={infoWidth} query={operation.query} />
     </Container>

@@ -4,8 +4,10 @@ import { useSelector } from 'react-redux';
 import { Redirect, Route, Switch } from 'react-router-dom';
 import styled from 'styled-components';
 
+import { DraggableHandle } from '../../components/draggableHandle';
 import { BASE_URL } from '../../config';
 import { ALL_API_KEY, selectViewOpListWidth } from '../../data';
+import { selectViewSideInfoWidthPercent } from '../../data/selectors';
 
 import { OperationTrace } from './content';
 import { DefaultContent } from './default';
@@ -48,9 +50,10 @@ const useWidth = () => {
 const OperationViewContent = ({ api, operationId }) => {
   const width = useWidth();
   const sideWidth = useSelector(selectViewOpListWidth);
+  const infoPercent = useSelector(selectViewSideInfoWidthPercent);
 
   const remainWidth = width - (sideWidth + 10);
-  const infoWidth = remainWidth * 0.25;
+  const infoWidth = remainWidth * infoPercent;
   const tracesWidth = remainWidth - infoWidth;
 
   return (
