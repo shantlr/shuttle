@@ -7,7 +7,7 @@ Apollo graphql server trace visualization tool
 ### Setup container
 
 ```bash
-docker run --publish 8021:8021 -d shantry/shuttle:0.0.4
+docker run --publish 8021:8021 -d shantry/shuttle:0.0.5
 ```
 
 ### Setup apollo server
