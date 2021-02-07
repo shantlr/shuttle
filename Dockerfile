@@ -1,41 +1,36 @@
-FROM node:15.0.1-alpine3.10
+# CLIENT
+FROM node:15.0.1-alpine3.10 AS CLIENT
 
-RUN apk add --no-cache --virtual .gyp \
-        python \
-        make \
-        g++
-
-WORKDIR /app/dist
-
-# Client install deps
 WORKDIR /app/client
-
-COPY "./client/package.json" .
-COPY "./client/yarn.lock" .
+COPY "./client/package.json" package.json
+COPY "./client/yarn.lock" yarn.lock
 
 RUN yarn install
 
-RUN apk del .gyp
-
-# Server install deps
-WORKDIR /app/server
-
-COPY "./server/package.json" .
-COPY "./server/yarn.lock" .
-RUN yarn install
-
-# Client build front
-WORKDIR /app/client
+# Build client
 COPY ./client .
 RUN yarn build
-RUN mv build ../dist/public
+
+# BACK
+FROM node:15.0.1-alpine3.10 AS BACK
+
+WORKDIR /app/server
+
+COPY "./server/package.json" package.json
+COPY "./server/yarn.lock" yarn.lock
+RUN yarn install
 
 # Server build server
-WORKDIR /app/server
 COPY ./server .
 RUN yarn build
-RUN mv build ../dist/src && mv node_modules ../dist/node_modules
 
-# Start
-WORKDIR /app/dist
-CMD ["node", "src/index.js"]
+# FINAL IMAGE
+FROM node:15.0.1-alpine3.10
+
+
+WORKDIR /app/server
+COPY --from=BACK /app/server .
+COPY --from=CLIENT /app/client/build public
+
+
+CMD ["node", "build/index.js"]

@@ -51,16 +51,17 @@ server.listen(PORT, () => {
 
 const gracefulShutdown = () => {
   console.log('Closing shuttle...');
-  server.close((err) => {
-    console.log('Shuttle closed');
-    if (!err) {
-      process.exit(0);
-    } else {
-      console.error(err);
-      process.exit(1);
-    }
+  io.close(() => {
+    console.log('Socker.io closed');
+    server.close((err) => {
+      console.log('Shuttle closed');
+      if (!err) {
+        process.exit(0);
+      } else {
+        console.error(err);
+        process.exit(1);
+      }
+    });
   });
 };
-
-process.once('SIGUSR2', gracefulShutdown);
-process.once('SIGABRT', gracefulShutdown);
+process.once('SIGTERM', gracefulShutdown);
