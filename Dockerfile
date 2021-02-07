@@ -29,8 +29,8 @@ FROM node:15.0.1-alpine3.10
 
 
 WORKDIR /app/server
-COPY --from=BACK /app/server .
+COPY --from=BACK /app/server/build/main.js index.js
 COPY --from=CLIENT /app/client/build public
 
 
-CMD ["node", "build/index.js"]
+CMD ["node", "index.js"]

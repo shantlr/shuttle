@@ -18,7 +18,7 @@ app.use(
   })
 );
 
-app.use('/app', express.static(path.join(__dirname, '../public')));
+app.use('/app', express.static('./public'));
 
 app.get(['/', '/app/*'], (req, res) => {
   return res.redirect('/app');
@@ -26,6 +26,7 @@ app.get(['/', '/app/*'], (req, res) => {
 
 const io = new Server({
   path: '/api',
+  serveClient: false,
 });
 io.attach(server);
 
